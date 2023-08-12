@@ -14,6 +14,7 @@ namespace Acibitah.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
+        public int? Difficulty { get; set; }
         //public Difficulty Difficulty { get; set; }
     }
 }

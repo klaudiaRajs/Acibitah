@@ -1,1 +1,50 @@
-﻿
+﻿@model TaskViewModel
+
+@{
+    if( Model.ToDo == null)
+    {
+        Model.ToDo = new ToDoTask(); 
+    }
+}
+<div class="container">
+    <div>
+        @Html.Partial("_addTask.cshtml", Model.ToDo)
+    </div>
+    <div class="mt-5">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">@nameof(Model.ToDo.Title)</th>
+                    <th scope="col">@nameof(Model.ToDo.Content)</th>
+                    <th scope="col">@nameof(Model.ToDo.Difficulty)</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (ToDoTask task in Model.Tasks)
+                {
+                    <tr>
+                        <th scope="row">
+                            @task.Id
+                        </th>
+                        <td>
+                            @task.Title
+                        </td>
+                        <td>
+                            @task.Content
+                        </td>
+                        <td>
+                            @task.Difficulty
+                        </td>
+                        <td class ="col col-lg-2">
+                            <a asp-controller="Task" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-warning">Edit</a>
+                            <a asp-controller="Task" asp-action="Remove" asp-route-id="@task.Id" class="btn btn-warning">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
