@@ -10,6 +10,7 @@ namespace Acibitah.Data.Data
 
         }
         public DbSet<ToDoTask> ToDoTasks { get; set; }
+        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ToDoTask>().HasData(

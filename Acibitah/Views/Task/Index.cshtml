@@ -8,7 +8,7 @@
 }
 <div class="container">
     <div>
-        @Html.Partial("_addTask.cshtml", Model.ToDo)
+        @await Html.PartialAsync("_addEditTask.cshtml", Model.ToDo)
     </div>
     <div class="mt-5">
         <table class="table">
