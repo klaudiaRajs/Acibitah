@@ -15,6 +15,8 @@ namespace Acibitah.Models
         public string Title { get; set; }
         public string Content { get; set; }
         public int? Difficulty { get; set; }
+        public int MoneyImpact { get; set; }
         public ICollection<Subtask> Subtasks { get; set; }
+        public ICollection<Tag> Tags { get; set; }
     }
 }
