@@ -1,0 +1,26 @@
+﻿@model HomeViewModel
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">@nameof(Daily.Name)</th>
+            <th scope="col">@nameof(Daily.Streak)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Habit task in Model.Habits)
+        {
+            <tr>
+                <th scope="row">
+                    <input type="checkbox" />
+                </th>
+                <td>
+                    @task.Name
+                </td>
+                <td>
+                    @task.Streak
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

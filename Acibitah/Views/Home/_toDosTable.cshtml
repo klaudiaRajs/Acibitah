@@ -1,0 +1,22 @@
+﻿@model HomeViewModel
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">@nameof(ToDoTask.Title)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ToDoTask task in Model.ToDos)
+        {
+            <tr>
+                <th scope="row">
+                    <input type="checkbox" />
+                </th>
+                <td>
+                    @task.Title
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

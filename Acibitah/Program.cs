@@ -13,6 +13,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ITaskRepository, TaskRepository>();
+builder.Services.AddTransient<IHabitRepository, HabitRepository>();
+builder.Services.AddTransient<IDailyRepository, DailyRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 var app = builder.Build();
@@ -39,3 +41,4 @@ app.MapControllerRoute(
 Environment.SetEnvironmentVariable("Pepper", "randomText");
 
 app.Run();
+
