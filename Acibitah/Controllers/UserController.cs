@@ -23,5 +23,24 @@ namespace Acibitah.Controllers
             var result = _userRepository.Save(viewModel.User, viewModel.Password);
             return RedirectToAction("Index", "Task");
         }
+        public IActionResult LogIn()
+        {
+            //TODO manage the result 
+            return View(); 
+        }
+        [HttpPost]
+        public IActionResult Login(UserViewModel viewModel)
+        {
+            try
+            {            
+                //TODO manage the result 
+                var user = _userRepository.LogIn(viewModel.User.Login, viewModel.Password);
+                return RedirectToAction("Index", "Task");
+
+            } catch(Exception e)
+            {
+                return View();
+            }            
+        }
     }
 }

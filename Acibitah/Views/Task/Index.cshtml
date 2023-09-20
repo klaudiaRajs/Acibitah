@@ -22,7 +22,6 @@
                 </tr>
             </thead>
             <tbody>
-
                 @foreach (ToDoTask task in Model.Tasks)
                 {
                     <tr>
@@ -39,6 +38,7 @@
                             @task.Difficulty
                         </td>
                         <td class ="col col-lg-2">
+                            <a asp-controller="Task" asp-action="Details" asp-route-id="@task.Id" class="btn btn-warning">Details</a>
                             <a asp-controller="Task" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-warning">Edit</a>
                             <a asp-controller="Task" asp-action="Remove" asp-route-id="@task.Id" class="btn btn-warning">Delete</a>
                         </td>

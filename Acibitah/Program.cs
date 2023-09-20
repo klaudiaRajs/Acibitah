@@ -36,5 +36,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+Environment.SetEnvironmentVariable("Pepper", "randomText");
 
 app.Run();
