@@ -11,7 +11,8 @@ namespace Acibitah.Data.Repositories.Interfaces
     {
         bool Save(ToDoTask task);
         IEnumerable<ToDoTask> GetAll();
-        bool Remove(int id);
+        IEnumerable<Subtask> GetSubtasksByTask(ToDoTask task);
+        bool Remove(ToDoTask task);
         ToDoTask? GetById(int id);
         bool Update(ToDoTask task);
     }

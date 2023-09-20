@@ -4,6 +4,7 @@ using Acibitah.Data.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Acibitah.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230824155131_CreateSubtaskTable")]
+    partial class CreateSubtaskTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +51,7 @@ namespace Acibitah.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Heroes", (string)null);
+                    b.ToTable("Heroes");
                 });
 
             modelBuilder.Entity("Acibitah.Models.Subtask", b =>
@@ -76,7 +78,7 @@ namespace Acibitah.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subtasks", (string)null);
+                    b.ToTable("Subtasks");
 
                     b.HasData(
                         new
@@ -118,7 +120,7 @@ namespace Acibitah.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ToDoTasks", (string)null);
+                    b.ToTable("ToDoTasks");
 
                     b.HasData(
                         new
@@ -155,7 +157,7 @@ namespace Acibitah.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }

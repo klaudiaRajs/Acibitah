@@ -10,5 +10,6 @@ namespace Acibitah.Data.Repositories.Interfaces
     public interface IUserRepository
     {
         bool Save(User user, string password);
+        User LogIn(string login, string password);
     }
 }

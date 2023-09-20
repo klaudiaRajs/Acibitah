@@ -1,6 +1,7 @@
 ﻿using Acibitah.Data.Data;
 using Acibitah.Data.Repositories.Interfaces;
 using Acibitah.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,10 @@ using System.Threading.Tasks;
 
 namespace Acibitah.Data.Repositories
 {
-    public class TaskRepository : ITaskRepository
+    public class TaskRepository : BaseRepository, ITaskRepository
     {
-        private ApplicationDbContext _db; 
-        public TaskRepository(ApplicationDbContext db)
+        public TaskRepository(ApplicationDbContext db) : base(db)
         {
-            _db = db;
         }
 
         public IEnumerable<ToDoTask> GetAll()
@@ -40,19 +39,27 @@ namespace Acibitah.Data.Repositories
             }
         }
 
-        public bool Remove(int id)
+        public IEnumerable<Subtask> GetSubtasksByTask(ToDoTask task)
         {
             try
             {
-                //TODO przenieś to do kontrolera? 
-                ToDoTask? record = _db.ToDoTasks.FirstOrDefault(a => a.Id == id);
-                if (record != null)
+                using( ApplicationDbContext db = new ApplicationDbContext())
                 {
-                    _db.Remove(record);
-                    _db.SaveChanges();
-                    return true;
+                    return db.Subtasks.Where(a => a.TaskId == task.Id).ToList();
                 }
-                return false; 
+            } catch (Exception ex)
+            {
+                return Enumerable.Empty<Subtask>();
+            }
+        }
+
+        public bool Remove(ToDoTask task)
+        {
+            try
+            {
+                _db.Remove(task);
+                _db.SaveChanges();
+                return true;
             } catch (Exception ex)
             {
                 return false;
@@ -76,7 +83,6 @@ namespace Acibitah.Data.Repositories
         {
             try
             {
-                //TODO przenieś to do kontrolera? 
                 ToDoTask? record = _db.ToDoTasks.FirstOrDefault(a => a.Id == task.Id);
                 if (record != null)
                 {
