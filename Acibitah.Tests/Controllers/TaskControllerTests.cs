@@ -63,7 +63,7 @@ namespace Acibitah.Tests
             var result = _taskController.Details(5);
 
             Assert.Equal(typeof(RedirectToActionResult), result.GetType());
-            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE));
+            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
             Assert.Equal(TaskController.TASK_NOT_FOUND, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
 
         }
@@ -76,7 +76,7 @@ namespace Acibitah.Tests
             var result = _taskController.Details(_activeTasks.First().Id);
 
             Assert.Equal(typeof(ViewResult), result.GetType());
-            Assert.Equal(null, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE));
+            Assert.Equal(null, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
             Assert.Equal(_activeSubTasks.Count(), ((TaskViewModel)((ViewResult)result).Model).Subtasks.Count());
         }
 
@@ -88,7 +88,7 @@ namespace Acibitah.Tests
             var result = _taskController.Index(task);
 
             Assert.Equal(typeof(RedirectToActionResult), result.GetType());
-            Assert.Equal(TaskController.KEY_SUCCESS_MESSAGE, GetTempDataMessage(TaskController.KEY_SUCCESS_MESSAGE));
+            Assert.Equal(TaskController.KEY_SUCCESS_MESSAGE, GetTempDataMessage(TaskController.KEY_SUCCESS_MESSAGE, _taskController.TempData));
             Assert.Equal(TaskController.NEW_TASK_CREATED, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
             Assert.Equal(null, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
         }
@@ -102,7 +102,7 @@ namespace Acibitah.Tests
             var result = _taskController.Index(task);
 
             Assert.Equal(typeof(ViewResult), result.GetType());
-            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE));
+            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
             Assert.Equal(TaskController.TASK_NOT_CREATED, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
             Assert.Equal(task, ((TaskViewModel)((ViewResult)result).Model).ToDo);
             Assert.Equal(null, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
@@ -115,7 +115,7 @@ namespace Acibitah.Tests
             var result = _taskController.Remove(5);
 
             Assert.Equal(typeof(RedirectToActionResult), result.GetType());
-            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE));
+            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
             Assert.Equal(TaskController.TASK_NOT_FOUND, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
             Assert.Equal(null, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
         }
@@ -128,7 +128,7 @@ namespace Acibitah.Tests
             var result = _taskController.Remove(_activeTasks.First().Id);
 
             Assert.Equal(typeof(RedirectToActionResult), result.GetType());
-            Assert.Equal(TaskController.KEY_SUCCESS_MESSAGE, GetTempDataMessage(TaskController.KEY_SUCCESS_MESSAGE));
+            Assert.Equal(TaskController.KEY_SUCCESS_MESSAGE, GetTempDataMessage(TaskController.KEY_SUCCESS_MESSAGE, _taskController.TempData));
             Assert.Equal(TaskController.SUCCESSFULLY_DELETED, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
             Assert.Equal(null, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
         }
@@ -141,7 +141,7 @@ namespace Acibitah.Tests
             var result = _taskController.Remove(_activeTasks.First().Id);
 
             Assert.Equal(typeof(RedirectToActionResult), result.GetType());
-            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE));
+            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
             Assert.Equal(TaskController.REMOVING_PROBLEM, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
             Assert.Equal(null, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
         }
@@ -154,7 +154,7 @@ namespace Acibitah.Tests
             var result = _taskController.Edit(_activeTasks.First().Id);
 
             Assert.Equal(typeof(ViewResult), result.GetType());
-            Assert.Equal(null, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE));
+            Assert.Equal(null, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
         }
 
         [Fact]
@@ -164,7 +164,7 @@ namespace Acibitah.Tests
             var result = _taskController.Edit(_activeTasks.First().Id);
 
             Assert.Equal(typeof(ViewResult), result.GetType());
-            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE));
+            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
             Assert.Equal(TaskController.TASK_NOT_FOUND, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
             Assert.Equal(null, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
         }
@@ -177,24 +177,12 @@ namespace Acibitah.Tests
             var result = _taskController.Edit(_activeTasks.First());
 
             Assert.Equal(typeof(ViewResult), result.GetType());
-            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE));
+            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
             Assert.Equal(TaskController.ERROR_TASK_NOT_SAVED, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
             Assert.Equal(null, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
         }
 
-        private string GetTempDataMessage(string message)
-        {
-            string errorKey = null;
-            foreach (var key in _taskController.TempData.Keys)
-            {
-                if (key == message)
-                {
-                    errorKey = key;
-                    break;
-                }
-            }
-            return errorKey;
-        }
+
 
     }
 }
