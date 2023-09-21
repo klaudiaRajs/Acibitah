@@ -15,5 +15,6 @@ namespace Acibitah.Models
         public int? PositiveValue { get; set; }
         public int LifeImpact { get; set; }
         public int Streak { get; set; }
+        public ICollection<Tag> Tags { get; set; }
     }
 }
