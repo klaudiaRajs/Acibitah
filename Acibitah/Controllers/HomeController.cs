@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Acibitah.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private HomeViewModel _homeViewModel;
         private IHabitRepository _habitRepository; 

@@ -22,6 +22,7 @@ namespace Acibitah.Data.Repositories
             }
             catch (Exception ex)
             {
+                //TODO dodaj logger 
                 return Enumerable.Empty<Habit>();
             }
         }

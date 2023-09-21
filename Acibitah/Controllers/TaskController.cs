@@ -4,14 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Acibitah.Controllers
 {
-    public class TaskController : Controller
+    public class TaskController : BaseController
     {
         public const string TASK_NOT_FOUND = "Task not found, please try again later.";
         public const string NEW_TASK_CREATED = "New task created.";
         public const string TASK_NOT_CREATED = "Problem with creating the task. Try fixing some data or try again later.";
-        public const string KEY_ERROR_MESSAGE = "ErrorMessage";
-        public const string KEY_SUCCESS_MESSAGE = "SuccessMessage";
-        public const string SUCCESSFULLY_DELETED = "Deleted.";
         public const string REMOVING_PROBLEM = "Problem with removing task. Try again later. ";
         public const string ERROR_TASK_NOT_SAVED = "Problem with saving the task"; 
 
