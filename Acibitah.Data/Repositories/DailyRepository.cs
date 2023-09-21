@@ -1,6 +1,7 @@
 ﻿using Acibitah.Data.Data;
 using Acibitah.Data.Repositories.Interfaces;
 using Acibitah.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Acibitah.Data.Repositories
         {
             try
             {
-                return _db.Dailies.ToList();
+                return _db.Dailies.Include(a => a.Tags).ToList();
             }
             catch (Exception ex)
             {

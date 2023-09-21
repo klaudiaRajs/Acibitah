@@ -4,6 +4,7 @@
         <tr>
             <th scope="col"></th>
             <th scope="col">@nameof(ToDoTask.Title)</th>
+            <th scope="col">@nameof(ToDoTask.Tags)</th>
         </tr>
     </thead>
     <tbody>
@@ -15,6 +16,9 @@
                 </th>
                 <td>
                     @task.Title
+                </td>
+                <td>
+                    @string.Join(",", task.Tags.Select(a => a.Name))
                 </td>
             </tr>
         }

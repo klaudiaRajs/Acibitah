@@ -5,6 +5,7 @@
             <th scope="col"></th>
             <th scope="col">@nameof(Daily.Name)</th>
             <th scope="col">@nameof(Daily.Streak)</th>
+            <th scope="col">@nameof(Daily.Tags)</th>
         </tr>
     </thead>
     <tbody>
@@ -19,6 +20,9 @@
                 </td>
                 <td>
                     @task.Streak
+                </td>
+                <td>
+                    @string.Join(",", task.Tags.Select(a => a.Name))
                 </td>
             </tr>
         }

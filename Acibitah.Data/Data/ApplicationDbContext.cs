@@ -45,7 +45,9 @@ namespace Acibitah.Data.Data
             modelBuilder.Entity<HabbitStats>().HasData(
                 new HabbitStats() { Id = 1, HabitId = 1, NegativeValue = 5, PositiveValue = 1, DateOfUpdate = DateTime.Now}
             );
-
+            modelBuilder.Entity("TagToDoTask").HasData(
+                new { TagsId = 1, TasksId = 3 }
+            );
         }
 
     }
