@@ -8,15 +8,13 @@ namespace Acibitah.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private HomeViewModel _homeViewModel;
         private IHabitRepository _habitRepository; 
         private IDailyRepository _dailyRepository;
         private ITaskRepository _taskRepository;
 
-        public HomeController(ILogger<HomeController> logger, IHabitRepository habitRepository, IDailyRepository dailyRepository, ITaskRepository taskRepository)
+        public HomeController(IHabitRepository habitRepository, IDailyRepository dailyRepository, ITaskRepository taskRepository)
         {
-            _logger = logger;
             _homeViewModel = new HomeViewModel();
             _habitRepository = habitRepository;
             _dailyRepository = dailyRepository;

@@ -1,40 +1,20 @@
 ﻿using Acibitah.Controllers;
-using Acibitah.Data.Repositories.Interfaces;
 using Acibitah.Models;
 using Acibitah.Models.Enums;
+using Acibitah.Tests.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Acibitah.Tests
 {
-
-    public class TaskControllerTests
+    public class TaskControllerTests : BaseTest
     {
-        private List<ToDoTask> _activeTasks;
-        private List<Subtask> _activeSubTasks;
         private TaskController _taskController;
-        private readonly Mock<ITaskRepository> _taskRepositoryMock;
 
         public TaskControllerTests()
         {
-            _activeTasks = new List<ToDoTask>
-            {
-                new ToDoTask{ Id = 1, Title = "Task", Content = "Stuff to do", Difficulty = (int)Difficulty.Easy }
-            };
-
-            _activeSubTasks = new List<Subtask>
-            {
-                new Subtask{ Id = 1, Name = "SubTask", Description = "Stuff to do", Done = false,  TaskId = 1}
-            };
-
-            _taskRepositoryMock = new Mock<ITaskRepository>();
             _taskRepositoryMock.Setup(x => x.GetAll()).Returns(_activeTasks);
 
             _taskController = new TaskController(_taskRepositoryMock.Object);
@@ -58,7 +38,7 @@ namespace Acibitah.Tests
         public void ShouldMainViewWorkWithNoneToDoTasks()
         {
             _activeTasks.Clear();
-            ViewResult result = (ViewResult) _taskController.Index();
+            ViewResult result = (ViewResult)_taskController.Index();
             Assert.Equal(typeof(TaskViewModel), result.Model.GetType());
             Assert.Empty(((TaskViewModel)result.Model).Tasks);
         }
@@ -85,14 +65,14 @@ namespace Acibitah.Tests
             Assert.Equal(typeof(RedirectToActionResult), result.GetType());
             Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE));
             Assert.Equal(TaskController.TASK_NOT_FOUND, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
-            
+
         }
 
         [Fact]
         public void ShouldSubtasksBeGetWhenTaskIsValid()
         {
             _taskRepositoryMock.Setup(x => x.GetById(_activeTasks.First().Id)).Returns(_activeTasks.First());
-            _taskRepositoryMock.Setup(x => x.GetSubtasksByTask(_activeTasks.First())).Returns(_activeSubTasks); 
+            _taskRepositoryMock.Setup(x => x.GetSubtasksByTask(_activeTasks.First())).Returns(_activeSubTasks);
             var result = _taskController.Details(_activeTasks.First().Id);
 
             Assert.Equal(typeof(ViewResult), result.GetType());
@@ -105,7 +85,7 @@ namespace Acibitah.Tests
         {
             ToDoTask task = new ToDoTask() { Title = "NewTitle", Content = "Abc", Difficulty = (int)Difficulty.Easy };
             _taskRepositoryMock.Setup(x => x.Save(task)).Returns(true);
-            var result = _taskController.Index(task); 
+            var result = _taskController.Index(task);
 
             Assert.Equal(typeof(RedirectToActionResult), result.GetType());
             Assert.Equal(TaskController.KEY_SUCCESS_MESSAGE, GetTempDataMessage(TaskController.KEY_SUCCESS_MESSAGE));
@@ -193,7 +173,7 @@ namespace Acibitah.Tests
         public void ShouldEditThrowAnError()
         {
             _taskRepositoryMock.Setup(x => x.GetById(_activeTasks.First().Id)).Returns(_activeTasks.FirstOrDefault());
-            _taskRepositoryMock.Setup(x => x.Update(_activeTasks.First())).Returns(false); 
+            _taskRepositoryMock.Setup(x => x.Update(_activeTasks.First())).Returns(false);
             var result = _taskController.Edit(_activeTasks.First());
 
             Assert.Equal(typeof(ViewResult), result.GetType());
