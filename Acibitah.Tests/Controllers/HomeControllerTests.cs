@@ -38,7 +38,20 @@ namespace Acibitah.Controllers.Tests
             Assert.Equal(_habits.Count(), model.Habits.Count());
             Assert.Equal(_dailies.Count(), model.Dailies.Count());
             Assert.Equal(_activeTasks.Count(), model.ToDos.Count());
+            Assert.Equal(0, model.ToDo.Id); 
             Assert.Equal(null, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _homeController.TempData));
+        }
+
+        [Fact]
+        public void IndexErrorOnReturningHabitsTest()
+        {
+
+        }
+
+        [Fact]
+        public void QuickAddTaskWithTagsCorrectlySavedToDoTest()
+        {
+
         }
     }
 }

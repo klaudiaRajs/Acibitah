@@ -13,9 +13,9 @@ namespace Acibitah.Models
         [Key]
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
         public int? Difficulty { get; set; }
-        public int MoneyImpact { get; set; }
+        public int MoneyImpact { get; set; } = 5;
         public ICollection<Subtask> Subtasks { get; set; }
         public ICollection<Tag> Tags { get; set; }
     }

@@ -1,5 +1,12 @@
 ﻿@model HomeViewModel
-<table class="table">
+
+<form method="post" action="@Url.Action("QuickAddHabitWithTags", "Home")">
+    <div class="mb-3 row">
+        <input asp-for="@Model.Habit.Name" class="form-control" />
+        <button type="submit" class="btn btn-primary">@(Model.Habit?.Id != 0 ? "Update" : "Create")</button>
+    </div>
+</form>
+<table class="table text-center">
     <thead class="thead-light">
         <tr>
             <th scope="col"></th>
@@ -10,7 +17,7 @@
             <th scope="col">@nameof(Habit.Tags)</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody >
         @foreach (Habit task in Model.Habits)
         {
             <tr>

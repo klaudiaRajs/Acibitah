@@ -9,6 +9,7 @@ namespace Acibitah.Data.Repositories.Interfaces
 {
     public interface IHabitRepository
     {
-        IEnumerable<Habit> GetAll(); 
+        IEnumerable<Habit> GetAll();
+        bool Save(Habit habit); 
     }
 }

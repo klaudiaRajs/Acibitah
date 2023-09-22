@@ -10,11 +10,11 @@ namespace Acibitah.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
         public int? NegativeValue { get; set; }
-        public int? PositiveValue { get; set; }
-        public int LifeImpact { get; set; }
-        public int Streak { get; set; }
+        public int? PositiveValue { get; set; } = 1;
+        public int LifeImpact { get; set; } = 10;
+        public int Streak { get; set; } = 0; 
         public ICollection<Tag> Tags { get; set; }
     }
 }

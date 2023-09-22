@@ -1,5 +1,13 @@
 ﻿@model HomeViewModel
-<table class="table">
+
+<form method="post" action="@Url.Action("QuickAddTaskWithTags", "Home")">
+    <div class="mb-3 row">
+        <input asp-for="@Model.ToDo.Title" class="form-control" />
+        <button type="submit" class="btn btn-primary">@(Model.ToDo?.Id != 0 ? "Update" : "Create")</button>
+    </div>
+</form>
+
+<table class="table text-center" >
     <thead class="thead-light">
         <tr>
             <th scope="col"></th>

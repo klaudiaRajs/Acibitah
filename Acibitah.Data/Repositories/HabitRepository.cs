@@ -2,6 +2,7 @@
 using Acibitah.Data.Repositories.Interfaces;
 using Acibitah.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Acibitah.Data.Repositories
 {
@@ -20,6 +21,20 @@ namespace Acibitah.Data.Repositories
             {
                 //TODO dodaj logger 
                 return Enumerable.Empty<Habit>();
+            }
+        }
+
+        public bool Save(Habit habit)
+        {
+            try
+            {
+                _db.Habits.Add(habit);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }
