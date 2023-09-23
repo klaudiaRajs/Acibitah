@@ -8,8 +8,8 @@ namespace Acibitah.Controllers
 {
     public class HomeController : BaseController
     {
-        public const string ERROR_SAVING = "Problem with saving. Please try again later.";
-        public const string SUCCESS_SAVED = "Success.";
+        
+
         private HomeViewModel _homeViewModel;
         private IHabitRepository _habitRepository; 
         private IDailyRepository _dailyRepository;
@@ -28,6 +28,11 @@ namespace Acibitah.Controllers
             _homeViewModel.Habits = _habitRepository.GetAll(); 
             _homeViewModel.Dailies = _dailyRepository.GetAll();
             _homeViewModel.ToDos = _taskRepository.GetAll();
+
+            if(  _homeViewModel.Habits == null || _homeViewModel.Dailies == null  || _homeViewModel.ToDos == null)
+            {
+                TempData[KEY_ERROR_MESSAGE] = ERROR_RETRIEVING; 
+            }
             return View(_homeViewModel);
         }
 

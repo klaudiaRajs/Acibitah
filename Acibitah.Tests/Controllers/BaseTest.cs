@@ -8,10 +8,10 @@ namespace Acibitah.Tests.Controllers
 {
     public class BaseTest
     {
-        protected List<ToDoTask> _activeTasks;
-        protected List<Subtask> _activeSubTasks;
-        protected List<Habit> _habits;
-        protected List<Daily> _dailies;
+        public List<ToDoTask> _activeTasks;
+        public List<Subtask> _activeSubTasks;
+        public List<Habit> _habits;
+        public List<Daily> _dailies;
         protected readonly Mock<ITaskRepository> _taskRepositoryMock;
         protected readonly Mock<IHabitRepository> _habitRepositoryMock;
         protected readonly Mock<IDailyRepository> _dailyRepositoryMock;

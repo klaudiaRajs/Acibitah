@@ -20,7 +20,7 @@ namespace Acibitah.Data.Repositories
         {
             try
             {
-                return _db.ToDoTasks.Include(a => a.Tags).ToList(); 
+                return _db.ToDoTasks.ToList(); 
             } catch (Exception ex) 
             {
                 return Enumerable.Empty<ToDoTask>();
