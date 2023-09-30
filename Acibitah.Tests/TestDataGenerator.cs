@@ -23,7 +23,7 @@ namespace Acibitah.Tests
             };
             List<Habit> _habits = new List<Habit>
             {
-                new Habit() { Id = 1, Description = "Drink water", Name = "Water", LifeImpact = 5, NegativeValue = 3, PositiveValue = 4, Streak = 0 }
+                new Habit() { Id = 1, Description = "Drink water", Name = "Water", LifeImpact = 5, NegativeValue = 3, PositiveValue = 4}
             };
             List<Daily> _dailies = new List<Daily>()
             {

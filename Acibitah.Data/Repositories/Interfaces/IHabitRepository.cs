@@ -10,6 +10,8 @@ namespace Acibitah.Data.Repositories.Interfaces
     public interface IHabitRepository
     {
         IEnumerable<Habit> GetAll();
+        Habit? GetById(int id);
+        void IncreaseStreak(Habit? habit);
         bool Save(Habit habit); 
     }
 }

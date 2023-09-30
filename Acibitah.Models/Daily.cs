@@ -13,6 +13,7 @@ namespace Acibitah.Models
         public string Description { get; set; }
         public DateTime Created { get; set; }
         public int Streak { get; set; }
+        public bool Done { get; set; } = false; 
         public ICollection<Tag> Tags { get; set; }
     }
 }

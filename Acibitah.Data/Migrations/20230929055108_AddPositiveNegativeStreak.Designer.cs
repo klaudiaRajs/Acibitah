@@ -4,6 +4,7 @@ using Acibitah.Data.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Acibitah.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230929055108_AddPositiveNegativeStreak")]
+    partial class AddPositiveNegativeStreak
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,9 +39,6 @@ namespace Acibitah.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Done")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -55,9 +54,8 @@ namespace Acibitah.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 9, 30, 13, 1, 37, 263, DateTimeKind.Local).AddTicks(9409),
+                            Created = new DateTime(2023, 9, 29, 7, 51, 7, 917, DateTimeKind.Local).AddTicks(6759),
                             Description = "Breakfast",
-                            Done = false,
                             Name = "Breakfast",
                             Streak = 0
                         });
@@ -93,7 +91,7 @@ namespace Acibitah.Data.Migrations
                         new
                         {
                             Id = 1,
-                            DateOfUpdate = new DateTime(2023, 9, 30, 13, 1, 37, 263, DateTimeKind.Local).AddTicks(9454),
+                            DateOfUpdate = new DateTime(2023, 9, 29, 7, 51, 7, 917, DateTimeKind.Local).AddTicks(6809),
                             HabitId = 1,
                             NegativeValue = 5,
                             PositiveValue = 1

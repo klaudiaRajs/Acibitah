@@ -18,11 +18,11 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (Habit task in Model.Habits)
+        @foreach (Daily task in Model.Dailies)
         {
             <tr>
                 <th scope="row">
-                    <input type="checkbox" />
+                    <input type="checkbox" onclick="check(this, @task.Id)"/>
                 </th>
                 <td>
                     @task.Name

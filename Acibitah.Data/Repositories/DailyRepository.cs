@@ -4,6 +4,7 @@ using Acibitah.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,12 +20,29 @@ namespace Acibitah.Data.Repositories
         {
             try
             {
-                return _db.Dailies.Include(a => a.Tags).ToList();
+                return _db.Dailies.Where(a => a.Done == false).Include(a => a.Tags).ToList();
             }
             catch (Exception ex)
             {
                 return Enumerable.Empty<Daily>();
             }
+        }
+
+        public Daily GetById(int id)
+        {
+            try
+            {
+                return _db.Dailies.Where(a => a.Id == id).FirstOrDefault(); 
+            } catch (Exception ex) {
+                return null; 
+            }
+        }
+
+        public void MarkAsDone(Daily daily)
+        {
+            daily.Done = true;
+            _db.Update(daily);
+            _db.SaveChanges();
         }
     }
 }

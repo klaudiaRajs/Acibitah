@@ -1,6 +1,8 @@
-﻿using Acibitah.Data.Repositories.Interfaces;
+﻿using Acibitah.Data.Repositories;
+using Acibitah.Data.Repositories.Interfaces;
 using Acibitah.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Acibitah.Controllers
 {
@@ -14,11 +16,17 @@ namespace Acibitah.Controllers
 
         private ITaskRepository _taskRepository;
         private TaskViewModel _taskViewModel;
-        public TaskController(ITaskRepository taskRepository)
+        private IHabitRepository _habitRepository;
+        private IDailyRepository _dailyRepository;
+
+        public TaskController(ITaskRepository taskRepository, IHabitRepository habitRepository, IDailyRepository dailyRepository)
         {
             _taskRepository = taskRepository;
             _taskViewModel = new TaskViewModel();
             _taskViewModel.Tasks = _taskRepository.GetAll().ToList();
+            _habitRepository = habitRepository;
+            _dailyRepository = dailyRepository;
+
         }
 
         [HttpGet]
@@ -103,6 +111,26 @@ namespace Acibitah.Controllers
             }
             _taskViewModel.ToDo = new ToDoTask();
             return RedirectToAction("Index");
+        }
+
+        public IActionResult IncreaseStreaks(int id, bool positive, bool negative)
+        {
+            Habit? habit = _habitRepository.GetById(id);
+            habit.StreakPositive = positive ? ++habit.StreakPositive : habit.StreakPositive; 
+            habit.StreakNegative = negative ? ++habit.StreakNegative : habit.StreakNegative;
+            _habitRepository.IncreaseStreak(habit);
+            return RedirectToAction("Index", "Home");
+        }
+
+        public void CheckDaily(int id)
+        {
+            Daily daily = _dailyRepository.GetById(id); 
+            if (daily == null)
+            {
+                return;
+            }
+            _dailyRepository.MarkAsDone(daily); 
+
         }
     }
 }

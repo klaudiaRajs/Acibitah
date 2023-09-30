@@ -37,5 +37,16 @@ namespace Acibitah.Data.Repositories
                 return false;
             }
         }
+
+        public void IncreaseStreak(Habit habit)
+        {
+            _db.Habits.Update(habit);
+            _db.SaveChanges();
+        }
+
+        public Habit? GetById(int id)
+        {
+            return _db.Habits.Where(a => a.Id == id).FirstOrDefault();
+        }
     }
 }

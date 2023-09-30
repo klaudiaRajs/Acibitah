@@ -37,7 +37,7 @@ namespace Acibitah.Data.Data
                 new Tag() { Id = 1, Name = "Work"}    
             );
             modelBuilder.Entity<Habit>().HasData(
-                new Habit() { Id = 1, Description = "Drink water", Name = "Water", LifeImpact = 5, NegativeValue = 3, PositiveValue = 4, Streak = 0 }
+                new Habit() { Id = 1, Description = "Drink water", Name = "Water", LifeImpact = 5, NegativeValue = 3, PositiveValue = 4 }
             );
             modelBuilder.Entity<Daily>().HasData(
                 new Daily() { Id = 1, Description = "Breakfast", Name = "Breakfast", Created = DateTime.Now }

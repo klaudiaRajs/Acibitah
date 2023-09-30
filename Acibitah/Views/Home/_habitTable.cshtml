@@ -11,10 +11,7 @@
         <tr>
             <th scope="col"></th>
             <th scope="col">@nameof(Habit.Name)</th>
-            <th scope="col">@nameof(Habit.PositiveValue)</th>
-            <th scope="col">@nameof(Habit.NegativeValue)</th>
-            <th scope="col">@nameof(Habit.Streak)</th>
-            <th scope="col">@nameof(Habit.Tags)</th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody >
@@ -22,22 +19,30 @@
         {
             <tr>
                 <th scope="row">
-                    <input type="checkbox"/>
+                    @if( task.PositiveValue != null)
+                    {
+                        <button class="btn-sm btn-dark" type="submit">
+                            <a asp-controller="Task" asp-action="IncreaseStreaks" asp-route-id="@task.Id" asp-route-positive="true" asp-route-negative="false">
+                                <i class="bi bi-patch-plus text-success"></i>
+                            </a>
+                        </button>
+                        <p style="font-size: 0.8em" class="m-0 p-0"><small>@task.StreakPositive</small></p>
+                    }
                 </th>
                 <td>
                     @task.Name
+                    <p style="font-size: 0.8em" class="m-0 p-0"><small>@string.Join(",", task.Tags.Select(a => a.Name))</small></p>
                 </td>
                 <td>
-                    @task.PositiveValue
-                </td>
-                <td>
-                    @task.NegativeValue
-                </td>
-                <td>
-                    @task.Streak
-                </td>
-                <td>
-                    @string.Join(",", task.Tags.Select(a => a.Name))
+                    @if (task.NegativeValue != null)
+                    {
+                        <button class="btn-sm btn-dark" type="submit">
+                            <a asp-controller="Task" , asp-action="IncreaseStreaks" asp-route-id="@task.Id" asp-route-positive="false" asp-route-negative="true">
+                            <i class="bi bi-patch-minus text-danger"></i>
+                        </a>
+                        </button>
+                        <p style="font-size: 0.8em" class="m-0 p-0">@task.StreakNegative</p>
+                    }
                 </td>
             </tr>
         }

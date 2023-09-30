@@ -16,8 +16,9 @@ namespace Acibitah.Tests
         public TaskControllerTests()
         {
             _taskRepositoryMock.Setup(x => x.GetAll()).Returns(_activeTasks);
+            
 
-            _taskController = new TaskController(_taskRepositoryMock.Object);
+            _taskController = new TaskController(_taskRepositoryMock.Object, _habitRepositoryMock.Object, _dailyRepositoryMock.Object);
 
             ITempDataProvider tempDataProvider = Mock.Of<ITempDataProvider>();
             TempDataDictionaryFactory tempDataDictionaryFactory = new TempDataDictionaryFactory(tempDataProvider);
