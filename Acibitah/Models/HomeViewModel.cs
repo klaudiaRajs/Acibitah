@@ -7,5 +7,6 @@
         public IEnumerable<ToDoTask> ToDos { get; set; }
         public ToDoTask ToDo { get; set; } = new ToDoTask();
         public Habit Habit { get; set; } = new Habit();
+        public Daily Daily { get; set; } = new Daily();
     }
 }

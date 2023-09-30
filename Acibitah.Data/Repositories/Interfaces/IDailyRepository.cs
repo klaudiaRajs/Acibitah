@@ -12,5 +12,6 @@ namespace Acibitah.Data.Repositories.Interfaces
         IEnumerable<Daily> GetAll();
         Daily GetById(int id);
         void MarkAsDone(Daily daily);
+        bool Save(Daily habit);
     }
 }

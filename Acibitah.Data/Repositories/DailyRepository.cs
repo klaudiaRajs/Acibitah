@@ -44,5 +44,18 @@ namespace Acibitah.Data.Repositories
             _db.Update(daily);
             _db.SaveChanges();
         }
+
+        public bool Save(Daily daily)
+        {
+            try
+            {
+                _db.Add(daily);
+                _db.SaveChanges(); 
+                return true; 
+            } catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

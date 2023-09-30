@@ -78,6 +78,28 @@ namespace Acibitah.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public IActionResult QuickAddDaily(HomeViewModel viewModel)
+        {
+            if (viewModel == null || viewModel.Daily.Name == null)
+            {
+                TempData[KEY_ERROR_MESSAGE] = ERROR_SAVING;
+            }
+            else
+            {
+                bool result = _dailyRepository.Save(viewModel.Daily);
+                if (!result)
+                {
+                    TempData[KEY_ERROR_MESSAGE] = ERROR_SAVING;
+                }
+                else
+                {
+                    TempData[KEY_SUCCESS_MESSAGE] = SUCCESS_SAVED;
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

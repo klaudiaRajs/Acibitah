@@ -2,8 +2,8 @@
 
 <form method="post">
     <div class="mb-3 row">
-        <input asp-for="@Model.ToDo.Title" class="form-control" />
-        <button type="submit" class="btn btn-primary">@(Model.ToDo?.Id != 0 ? "Update" : "Create")</button>
+        <input asp-for="@Model.Daily.Name" class="form-control" />
+        <button type="submit" class="btn btn-primary" asp-controller="Home" asp-action="QuickAddDaily">Create</button>
     </div>
 </form>
 
@@ -11,10 +11,8 @@
 <table class="table text-center">
     <thead class="thead-light">
         <tr>
-            <th scope="col"></th>
-            <th scope="col">@nameof(Daily.Name)</th>
-            <th scope="col">@nameof(Daily.Streak)</th>
-            <th scope="col">@nameof(Daily.Tags)</th>
+            <th scope="col" class="col col-lg-2"></th>
+            <th scope="col" class="col-md-auto">@nameof(Daily.Name)</th>
         </tr>
     </thead>
     <tbody>
@@ -26,12 +24,7 @@
                 </th>
                 <td>
                     @task.Name
-                </td>
-                <td>
-                    @task.Streak
-                </td>
-                <td>
-                    @string.Join(",", task.Tags.Select(a => a.Name))
+                    <p style="font-size: 0.8em" class="m-0 p-0"><small>@string.Join(",", task.Tags.Select(a => a.Name))</small></p>
                 </td>
             </tr>
         }
