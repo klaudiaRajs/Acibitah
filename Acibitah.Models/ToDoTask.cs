@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Acibitah.Models
 {
-    public class ToDoTask 
+    public class ToDoTask : IModel
     {
         [Key]
         public int Id { get; set; }

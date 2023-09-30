@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Acibitah.Models
 {
-    public class Daily
+    public class Daily : IModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

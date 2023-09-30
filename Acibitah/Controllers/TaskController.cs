@@ -40,9 +40,8 @@ namespace Acibitah.Controllers
         public IActionResult Details(int id)
         {
             _taskViewModel.ToDo = _taskRepository.GetById(id);
-            if( _taskViewModel.ToDo == null)
+            if( NullValueWithTempMessage(_taskViewModel.ToDo, TASK_NOT_FOUND))
             {
-                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND;
                 return RedirectToAction("Index");
             }
 
@@ -54,33 +53,21 @@ namespace Acibitah.Controllers
         public IActionResult Index(ToDoTask task)
         {
             var result = _taskRepository.Save(task);
-            if( result) 
+            if( IsResultTrueWithTempMessage(result, TASK_NOT_CREATED, NEW_TASK_CREATED))
             {
-                TempData[KEY_SUCCESS_MESSAGE] = NEW_TASK_CREATED;
                 return RedirectToAction("Index");
-            } else
-            {
-                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_CREATED;
-                _taskViewModel.ToDo = task; 
-                return View(_taskViewModel);
             }
+            _taskViewModel.ToDo = task;
+            return View(_taskViewModel);
         }
+
         public IActionResult Remove(int id)
         {
             ToDoTask? taskToBeRemoved = _taskRepository.GetById(id);
-            if( taskToBeRemoved == null)
-            {
-                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND;
-            } else
+            if( !NullValueWithTempMessage(taskToBeRemoved, TASK_NOT_FOUND))
             {
                 var result = _taskRepository.Remove(taskToBeRemoved);
-                if( !result )
-                {
-                    TempData[KEY_ERROR_MESSAGE] = REMOVING_PROBLEM;
-                } else
-                {
-                    TempData[KEY_SUCCESS_MESSAGE] = SUCCESSFULLY_DELETED;
-                }
+                IsResultTrueWithTempMessage(result, REMOVING_PROBLEM, SUCCESSFULLY_DELETED); 
             }
 
             return RedirectToAction("Index");
@@ -88,10 +75,8 @@ namespace Acibitah.Controllers
         public IActionResult Edit(int id)
         {
             _taskViewModel.ToDo = _taskRepository.GetById(id);
-            if(  _taskViewModel.ToDo == null )
-            {
-                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND; 
-            }
+            NullValueWithTempMessage(_taskViewModel.ToDo, TASK_NOT_FOUND); 
+            
             return View("Index", _taskViewModel);
         }
 
@@ -99,21 +84,14 @@ namespace Acibitah.Controllers
         public IActionResult Edit(ToDoTask task)
         {
             _taskViewModel.ToDo = _taskRepository.GetById(task.Id);
-            if( _taskViewModel.ToDo == null)
+            if( !NullValueWithTempMessage(_taskViewModel.ToDo, TASK_NOT_FOUND))
             {
-                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND; 
-            } else {
                 var result = _taskRepository.Update(task);
-                if (!result)
+                if( !IsResultTrueWithTempMessage(result, ERROR_TASK_NOT_SAVED, SUCCESS_SAVED))
                 {
-                    TempData[KEY_ERROR_MESSAGE] = ERROR_TASK_NOT_SAVED;
                     return View(_taskViewModel);
-                } else
-                {
-                    TempData[KEY_SUCCESS_MESSAGE] = SUCCESS_SAVED; 
                 }
             }
-            
             _taskViewModel.ToDo = new ToDoTask();
             return RedirectToAction("Index");
         }
@@ -121,52 +99,60 @@ namespace Acibitah.Controllers
         public IActionResult IncreaseStreaks(int id, bool positive, bool negative)
         {
             Habit? habit = _habitRepository.GetById(id);
-            if ( habit == null )
+            if ( NullValueWithTempMessage(habit, TASK_NOT_FOUND) )
             {
-                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND;
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home"); 
             }
+
             habit.StreakPositive = positive ? ++habit.StreakPositive : habit.StreakPositive; 
             habit.StreakNegative = negative ? ++habit.StreakNegative : habit.StreakNegative;
             var result = _habitRepository.IncreaseStreak(habit);
-            if( !result)
-            {
-                TempData[KEY_ERROR_MESSAGE] = ERROR_SAVING; 
-            } else
-            {
-                TempData[KEY_SUCCESS_MESSAGE] = SUCCESS_SAVED; 
-            }
+            IsResultTrueWithTempMessage(result, ERROR_SAVING, SUCCESS_SAVED); 
             return RedirectToAction("Index", "Home");
         }
 
         public void CheckDaily(int id)
         {
             Daily daily = _dailyRepository.GetById(id); 
-            if ( daily == null )
+            if( NullValueWithTempMessage(daily, TASK_NOT_FOUND))
             {
-                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND;
-                return; 
+                return;
             }
-            var result =_dailyRepository.MarkAsDone(daily); 
-            if( !result )
-            {
-                TempData[KEY_ERROR_MESSAGE] = ERROR_SAVING;
-            }
+            var result =_dailyRepository.MarkAsDone(daily);
+            IsResultTrueWithTempMessage(result, ERROR_SAVING, SUCCESS_SAVED);
         }
+
 
         public void CheckToDo(int id)
         {
             ToDoTask todo = _taskRepository.GetById(id);
-            if (todo == null)
+            if (NullValueWithTempMessage(todo, TASK_NOT_FOUND))
             {
-                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND;
                 return;
             }
             var result = _taskRepository.MarkAsDone(todo);
-            if (!result)
+            IsResultTrueWithTempMessage(result, ERROR_SAVING, SUCCESS_SAVED);
+        }
+
+        private bool IsResultTrueWithTempMessage(bool result, string error, string success)
+        {
+            if (result)
             {
-                TempData[KEY_ERROR_MESSAGE] = ERROR_SAVING;
+                TempData[KEY_SUCCESS_MESSAGE] = success;
+                return true;
             }
+            TempData[KEY_ERROR_MESSAGE] = error;
+            return false;
+        }
+
+        private bool NullValueWithTempMessage(IModel item, string error)
+        {
+            if (item == null)
+            {
+                TempData[KEY_ERROR_MESSAGE] = error;
+                return true;
+            }
+            return false;
         }
     }
 }
