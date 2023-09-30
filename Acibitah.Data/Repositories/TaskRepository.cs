@@ -53,11 +53,18 @@ namespace Acibitah.Data.Repositories
             }
         }
 
-        public void MarkAsDone(ToDoTask todo)
+        public bool MarkAsDone(ToDoTask todo)
         {
-            todo.Done = true;
-            _db.Update(todo);
-            _db.SaveChanges();
+            try
+            {
+                todo.Done = true;
+                _db.Update(todo);
+                _db.SaveChanges();
+                return true; 
+            } catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public bool Remove(ToDoTask task)

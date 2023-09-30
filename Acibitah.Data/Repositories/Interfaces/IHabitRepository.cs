@@ -11,7 +11,7 @@ namespace Acibitah.Data.Repositories.Interfaces
     {
         IEnumerable<Habit> GetAll();
         Habit? GetById(int id);
-        void IncreaseStreak(Habit? habit);
+        bool IncreaseStreak(Habit? habit);
         bool Save(Habit habit); 
     }
 }

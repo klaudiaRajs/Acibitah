@@ -38,10 +38,17 @@ namespace Acibitah.Data.Repositories
             }
         }
 
-        public void IncreaseStreak(Habit habit)
+        public bool IncreaseStreak(Habit habit)
         {
-            _db.Habits.Update(habit);
-            _db.SaveChanges();
+            try
+            {
+                _db.Habits.Update(habit);
+                _db.SaveChanges();
+                return true; 
+            } catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public Habit? GetById(int id)

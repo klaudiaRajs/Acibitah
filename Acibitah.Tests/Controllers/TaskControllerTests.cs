@@ -12,6 +12,9 @@ namespace Acibitah.Tests
     public class TaskControllerTests : BaseTest
     {
         private TaskController _taskController;
+        private Habit _habit;
+        private Daily _daily; 
+        private ToDoTask _toDoTask;
 
         public TaskControllerTests()
         {
@@ -24,6 +27,9 @@ namespace Acibitah.Tests
             TempDataDictionaryFactory tempDataDictionaryFactory = new TempDataDictionaryFactory(tempDataProvider);
             ITempDataDictionary tempData = tempDataDictionaryFactory.GetTempData(new DefaultHttpContext());
             _taskController.TempData = tempData;
+            _habit = _habits.FirstOrDefault();
+            _daily = _dailies.FirstOrDefault(); 
+            _toDoTask = _activeTasks.FirstOrDefault();
         }
 
         [Fact]
@@ -173,14 +179,134 @@ namespace Acibitah.Tests
         [Fact]
         public void ShouldEditThrowAnError()
         {
-            _taskRepositoryMock.Setup(x => x.GetById(_activeTasks.First().Id)).Returns(_activeTasks.FirstOrDefault());
-            _taskRepositoryMock.Setup(x => x.Update(_activeTasks.First())).Returns(false);
-            var result = _taskController.Edit(_activeTasks.First());
+            _taskRepositoryMock.Setup(x => x.GetById(_toDoTask.Id)).Returns(_toDoTask);
+            _taskRepositoryMock.Setup(x => x.Update(_toDoTask)).Returns(false);
+            var result = _taskController.Edit(_toDoTask);
 
             Assert.Equal(typeof(ViewResult), result.GetType());
             Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
             Assert.Equal(TaskController.ERROR_TASK_NOT_SAVED, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
             Assert.Equal(null, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
+        }
+
+        [Fact]
+        public void ShouldEditThrowAnErrorWhenNoTask()
+        {
+            _taskRepositoryMock.Setup(x => x.GetById(_toDoTask.Id)).Returns((ToDoTask)null);
+            var result = _taskController.Edit(_toDoTask);
+
+            _taskRepositoryMock.Verify(x => x.Update(_toDoTask), Times.Never()); 
+            Assert.Equal(typeof(RedirectToActionResult), result.GetType());
+            Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
+            Assert.Equal(TaskController.TASK_NOT_FOUND, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
+            Assert.Equal(null, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
+        }
+
+        [Fact]
+        public void ShouldEditShowSuccessMessage()
+        {
+            _taskRepositoryMock.Setup(x => x.GetById(_toDoTask.Id)).Returns(_toDoTask);
+            _taskRepositoryMock.Setup(x => x.Update(_toDoTask)).Returns(true);
+            var result = _taskController.Edit(_toDoTask);
+
+            _taskRepositoryMock.Verify(x => x.Update(_toDoTask), Times.Once());
+            Assert.Equal(typeof(RedirectToActionResult), result.GetType());
+            Assert.Equal(null, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
+            Assert.Equal(TaskController.SUCCESS_SAVED, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
+            Assert.Equal(null, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
+        }
+
+        [Fact]
+        public void ShouldHabitNotFoundThrowException()
+        {
+            _habitRepositoryMock.Setup(m => m.GetById(_habit.Id)).Returns((Habit)null);
+            _habitRepositoryMock.Verify(m => m.IncreaseStreak(_habit), Times.Never());
+            var result = _taskController.IncreaseStreaks(_habit.Id, true, false);
+
+
+            Assert.Equal(typeof(RedirectToActionResult), result.GetType());
+            Assert.Equal(TaskController.TASK_NOT_FOUND, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
+        }
+
+        [Fact]
+        public void ShouldIncreaseStreakBeCalledOnceFromRepoAndShowErrorMessage()
+        {
+            _habitRepositoryMock.Setup(m => m.GetById(_habit.Id)).Returns(_habit);
+            _habitRepositoryMock.Setup(m => m.IncreaseStreak(_habit)).Returns(false); 
+
+            var result = _taskController.IncreaseStreaks(_habit.Id, true, false);
+            _habitRepositoryMock.Verify(m => m.IncreaseStreak(_habit), Times.Once());
+
+            Assert.Equal(TaskController.ERROR_SAVING, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
+        }
+
+        [Fact]
+        public void ShouldHabitPositiveStreakIncreaseWhenRepoReturnsTrue()
+        {
+            Assert.Equal(0, _habit.StreakPositive);
+            _habitRepositoryMock.Setup(m => m.GetById(_habit.Id)).Returns(_habit);
+            _habitRepositoryMock.Setup(m => m.IncreaseStreak(_habit)).Returns(true);
+
+            var result = _taskController.IncreaseStreaks(_habit.Id, true, false);
+            _habitRepositoryMock.Verify(m => m.IncreaseStreak(_habit), Times.Once());
+
+            Assert.Equal(TaskController.SUCCESS_SAVED, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
+            Assert.Equal(1, _habit.StreakPositive);
+        }
+
+        [Fact]
+        public void ShouldHabitNegativeStreakIncreaseWhenRepoReturnsTrue()
+        {
+            Assert.Equal(0, _habit.StreakNegative);
+            _habitRepositoryMock.Setup(m => m.GetById(_habit.Id)).Returns(_habit);
+            _habitRepositoryMock.Setup(m => m.IncreaseStreak(_habit)).Returns(true);
+
+            var result = _taskController.IncreaseStreaks(_habit.Id, false, true);
+            _habitRepositoryMock.Verify(m => m.IncreaseStreak(_habit), Times.Once());
+
+            Assert.Equal(TaskController.SUCCESS_SAVED, _taskController.TempData[TaskController.KEY_SUCCESS_MESSAGE]);
+            Assert.Equal(1, _habit.StreakNegative);
+        }
+
+        [Fact]
+        public void ShouldCheckDailyShowErrorMessageWhenDailyNotFound()
+        {
+            _dailyRepositoryMock.Setup(m => m.GetById(_daily.Id)).Returns((Daily)null);
+            _taskController.CheckDaily(_daily.Id);
+
+            Assert.Equal(TaskController.TASK_NOT_FOUND, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
+            _dailyRepositoryMock.Verify(m => m.MarkAsDone(_daily), Times.Never()); 
+        }
+
+        [Fact]
+        public void ShouldCheckDailyShowErrorMessageWhenRepoReturnsFalls()
+        {
+            _dailyRepositoryMock.Setup(m => m.GetById(_daily.Id)).Returns(_daily);
+            _dailyRepositoryMock.Setup(m => m.MarkAsDone(_daily)).Returns(false);
+            _taskController.CheckDaily(_daily.Id);
+
+            Assert.Equal(TaskController.ERROR_SAVING, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
+            _dailyRepositoryMock.Verify(m => m.MarkAsDone(_daily), Times.Once());
+        }
+        [Fact]
+        public void ShouldCheckToDoShowErrorMessageWhenDailyNotFound()
+        {
+            _taskRepositoryMock.Setup(m => m.GetById(_toDoTask.Id)).Returns((ToDoTask)null);
+            _taskController.CheckToDo(_toDoTask.Id);
+
+            Assert.Equal(TaskController.TASK_NOT_FOUND, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
+            _taskRepositoryMock.Verify(m => m.MarkAsDone(_toDoTask), Times.Never());
+        }
+
+        [Fact]
+        public void ShouldCheckToDoShowErrorMessageWhenRepoReturnsFalls()
+        {
+            _taskRepositoryMock.Setup(m => m.GetById(_toDoTask.Id)).Returns(_toDoTask);
+            _taskRepositoryMock.Setup(m => m.MarkAsDone(_toDoTask)).Returns(false);
+            _taskController.CheckToDo(_toDoTask.Id);
+
+            Assert.Equal(TaskController.ERROR_SAVING, _taskController.TempData[TaskController.KEY_ERROR_MESSAGE]);
+            _taskRepositoryMock.Verify(m => m.MarkAsDone(_toDoTask), Times.Once());
         }
 
 

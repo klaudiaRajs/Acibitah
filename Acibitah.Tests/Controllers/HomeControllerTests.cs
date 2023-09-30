@@ -148,5 +148,51 @@ namespace Acibitah.Controllers.Tests
             Assert.Equal(null, _homeController.TempData[HomeController.KEY_ERROR_MESSAGE]);
             Assert.Equal(BaseController.SUCCESS_SAVED, _homeController.TempData[HomeController.KEY_SUCCESS_MESSAGE]);
         }
+
+        /* */ 
+        [Fact]
+        public void QuickAddDailyNoViewModelPassedTest()
+        {
+            var result = _homeController.QuickAddDaily(null);
+            Assert.Equal(typeof(RedirectToActionResult), result.GetType());
+            Assert.Equal(HomeController.KEY_ERROR_MESSAGE, GetTempDataMessage(HomeController.KEY_ERROR_MESSAGE, _homeController.TempData));
+            Assert.Equal(BaseController.ERROR_SAVING, _homeController.TempData[HomeController.KEY_ERROR_MESSAGE]);
+        }
+
+        [Fact]
+        public void QuickAddDailyNoToDoInViewModelTest()
+        {
+            HomeViewModel model = new HomeViewModel();
+            model.Daily = new Daily() { Name = null };
+            var result = _homeController.QuickAddDaily(model);
+            Assert.Equal(typeof(RedirectToActionResult), result.GetType());
+            Assert.Equal(HomeController.KEY_ERROR_MESSAGE, GetTempDataMessage(HomeController.KEY_ERROR_MESSAGE, _homeController.TempData));
+            Assert.Equal(BaseController.ERROR_SAVING, _homeController.TempData[HomeController.KEY_ERROR_MESSAGE]);
+        }
+
+        [Fact]
+        public void QuickAddDailyProblemWithSavingFromDbTest()
+        {
+            HomeViewModel model = new HomeViewModel();
+            model.Daily = new Daily() { Name = "TestName" };
+            _dailyRepositoryMock.Setup(method => method.Save(model.Daily)).Returns(false);
+            var result = _homeController.QuickAddDaily(model);
+            Assert.Equal(typeof(RedirectToActionResult), result.GetType());
+            Assert.Equal(HomeController.KEY_ERROR_MESSAGE, GetTempDataMessage(HomeController.KEY_ERROR_MESSAGE, _homeController.TempData));
+            Assert.Equal(BaseController.ERROR_SAVING, _homeController.TempData[HomeController.KEY_ERROR_MESSAGE]);
+        }
+
+        [Fact]
+        public void QuickAddDAilySavedCorrectlyTest()
+        {
+            HomeViewModel model = new HomeViewModel();
+            model.Daily = new Daily() { Name = "TestName" };
+            _dailyRepositoryMock.Setup(method => method.Save(model.Daily)).Returns(true);
+            var result = _homeController.QuickAddDaily(model);
+            Assert.Equal(typeof(RedirectToActionResult), result.GetType());
+            Assert.Equal(HomeController.KEY_SUCCESS_MESSAGE, GetTempDataMessage(HomeController.KEY_SUCCESS_MESSAGE, _homeController.TempData));
+            Assert.Equal(null, _homeController.TempData[HomeController.KEY_ERROR_MESSAGE]);
+            Assert.Equal(BaseController.SUCCESS_SAVED, _homeController.TempData[HomeController.KEY_SUCCESS_MESSAGE]);
+        }
     }
 }

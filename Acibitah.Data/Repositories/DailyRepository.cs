@@ -38,11 +38,18 @@ namespace Acibitah.Data.Repositories
             }
         }
 
-        public void MarkAsDone(Daily daily)
+        public bool MarkAsDone(Daily daily)
         {
-            daily.Done = true;
-            _db.Update(daily);
-            _db.SaveChanges();
+            try
+            {
+                daily.Done = true;
+                _db.Update(daily);
+                _db.SaveChanges();
+                return true;
+            } catch( Exception ex)
+            {
+                return false; 
+            }
         }
 
         public bool Save(Daily daily)

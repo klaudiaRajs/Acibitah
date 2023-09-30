@@ -12,8 +12,8 @@ namespace Acibitah.Controllers
         public const string NEW_TASK_CREATED = "New task created.";
         public const string TASK_NOT_CREATED = "Problem with creating the task. Try fixing some data or try again later.";
         public const string REMOVING_PROBLEM = "Problem with removing task. Try again later. ";
-        public const string ERROR_TASK_NOT_SAVED = "Problem with saving the task"; 
-
+        public const string ERROR_TASK_NOT_SAVED = "Problem with saving the task";
+        public const string ERROR_VALUES_NOT_CORRECT = "Provided values are not correct.";
         private ITaskRepository _taskRepository;
         private TaskViewModel _taskViewModel;
         private IHabitRepository _habitRepository;
@@ -102,13 +102,18 @@ namespace Acibitah.Controllers
             if( _taskViewModel.ToDo == null)
             {
                 TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND; 
+            } else {
+                var result = _taskRepository.Update(task);
+                if (!result)
+                {
+                    TempData[KEY_ERROR_MESSAGE] = ERROR_TASK_NOT_SAVED;
+                    return View(_taskViewModel);
+                } else
+                {
+                    TempData[KEY_SUCCESS_MESSAGE] = SUCCESS_SAVED; 
+                }
             }
-            var result = _taskRepository.Update(task);
-            if( !result)
-            {
-                TempData[KEY_ERROR_MESSAGE] = ERROR_TASK_NOT_SAVED;
-                return View(_taskViewModel);
-            }
+            
             _taskViewModel.ToDo = new ToDoTask();
             return RedirectToAction("Index");
         }
@@ -116,21 +121,37 @@ namespace Acibitah.Controllers
         public IActionResult IncreaseStreaks(int id, bool positive, bool negative)
         {
             Habit? habit = _habitRepository.GetById(id);
+            if ( habit == null )
+            {
+                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND;
+                return RedirectToAction("Index", "Home");
+            }
             habit.StreakPositive = positive ? ++habit.StreakPositive : habit.StreakPositive; 
             habit.StreakNegative = negative ? ++habit.StreakNegative : habit.StreakNegative;
-            _habitRepository.IncreaseStreak(habit);
+            var result = _habitRepository.IncreaseStreak(habit);
+            if( !result)
+            {
+                TempData[KEY_ERROR_MESSAGE] = ERROR_SAVING; 
+            } else
+            {
+                TempData[KEY_SUCCESS_MESSAGE] = SUCCESS_SAVED; 
+            }
             return RedirectToAction("Index", "Home");
         }
 
         public void CheckDaily(int id)
         {
             Daily daily = _dailyRepository.GetById(id); 
-            if (daily == null)
+            if ( daily == null )
             {
-                return;
+                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND;
+                return; 
             }
-            _dailyRepository.MarkAsDone(daily); 
-
+            var result =_dailyRepository.MarkAsDone(daily); 
+            if( !result )
+            {
+                TempData[KEY_ERROR_MESSAGE] = ERROR_SAVING;
+            }
         }
 
         public void CheckToDo(int id)
@@ -138,10 +159,14 @@ namespace Acibitah.Controllers
             ToDoTask todo = _taskRepository.GetById(id);
             if (todo == null)
             {
+                TempData[KEY_ERROR_MESSAGE] = TASK_NOT_FOUND;
                 return;
             }
-            _taskRepository.MarkAsDone(todo);
-
+            var result = _taskRepository.MarkAsDone(todo);
+            if (!result)
+            {
+                TempData[KEY_ERROR_MESSAGE] = ERROR_SAVING;
+            }
         }
     }
 }
