@@ -1,9 +1,9 @@
 ﻿@model HomeViewModel
 
-<form method="post" action="@Url.Action("QuickAddTaskWithTags", "Home")">
+<form method="post" >
     <div class="mb-3 row">
         <input asp-for="@Model.ToDo.Title" class="form-control" />
-        <button type="submit" class="btn btn-primary">@(Model.ToDo?.Id != 0 ? "Update" : "Create")</button>
+        <button type="submit" class="btn btn-primary">Create</button>
     </div>
 </form>
 
@@ -12,7 +12,6 @@
         <tr>
             <th scope="col"></th>
             <th scope="col">@nameof(ToDoTask.Title)</th>
-            <th scope="col">@nameof(ToDoTask.Tags)</th>
         </tr>
     </thead>
     <tbody>
@@ -20,13 +19,11 @@
         {
             <tr>
                 <th scope="row">
-                    <input type="checkbox" />
+                    <input type="checkbox" onclick="check(this, @task.Id, '@Url.Action("CheckTodo", "Task")')" />
                 </th>
                 <td>
                     @task.Title
-                </td>
-                <td>
-                    @string.Join(",", task.Tags.Select(a => a.Name))
+                    <p style="font-size: 0.8em" class="m-0 p-0"><small>@string.Join(",", task.Tags.Select(a => a.Name))</small></p>
                 </td>
             </tr>
         }

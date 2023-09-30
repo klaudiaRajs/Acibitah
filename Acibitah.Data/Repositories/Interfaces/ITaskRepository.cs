@@ -15,5 +15,6 @@ namespace Acibitah.Data.Repositories.Interfaces
         bool Remove(ToDoTask task);
         ToDoTask? GetById(int id);
         bool Update(ToDoTask task);
+        void MarkAsDone(ToDoTask todo);
     }
 }

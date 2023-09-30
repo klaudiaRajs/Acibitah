@@ -132,5 +132,16 @@ namespace Acibitah.Controllers
             _dailyRepository.MarkAsDone(daily); 
 
         }
+
+        public void CheckToDo(int id)
+        {
+            ToDoTask todo = _taskRepository.GetById(id);
+            if (todo == null)
+            {
+                return;
+            }
+            _taskRepository.MarkAsDone(todo);
+
+        }
     }
 }

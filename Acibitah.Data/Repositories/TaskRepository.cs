@@ -20,7 +20,7 @@ namespace Acibitah.Data.Repositories
         {
             try
             {
-                return _db.ToDoTasks.Include(task => task.Tags).ToList(); 
+                return _db.ToDoTasks.Where(a => a.Done == false).Include(task => task.Tags).ToList(); 
             } catch (Exception ex) 
             {
                 return Enumerable.Empty<ToDoTask>();
@@ -51,6 +51,13 @@ namespace Acibitah.Data.Repositories
             {
                 return Enumerable.Empty<Subtask>();
             }
+        }
+
+        public void MarkAsDone(ToDoTask todo)
+        {
+            todo.Done = true;
+            _db.Update(todo);
+            _db.SaveChanges();
         }
 
         public bool Remove(ToDoTask task)

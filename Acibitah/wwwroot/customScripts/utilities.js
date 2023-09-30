@@ -1,10 +1,10 @@
-﻿function check(element, taskId) {
+﻿function check(element, taskId, url) {
     if (!element.checked) {
         return; 
     }
     $.ajax({
         type: "GET", 
-        url: "/Task/CheckDaily",
+        url: url,
         data: {id: taskId}, 
         success: function (result) {
             location.reload();

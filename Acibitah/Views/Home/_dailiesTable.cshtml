@@ -1,9 +1,9 @@
 ﻿@model HomeViewModel
 
-<form method="post">
+<form method="post" action="@Url.Action("QuickAddDaily", "Home")">
     <div class="mb-3 row">
         <input asp-for="@Model.Daily.Name" class="form-control" />
-        <button type="submit" class="btn btn-primary" asp-controller="Home" asp-action="QuickAddDaily">Create</button>
+        <button type="submit" class="btn btn-primary">Create</button>
     </div>
 </form>
 
@@ -20,7 +20,7 @@
         {
             <tr>
                 <th scope="row">
-                    <input type="checkbox" onclick="check(this, @task.Id)"/>
+                    <input type="checkbox" onclick="check(this, @task.Id, '@Url.Action("CheckDaily", "Task")')" />
                 </th>
                 <td>
                     @task.Name
