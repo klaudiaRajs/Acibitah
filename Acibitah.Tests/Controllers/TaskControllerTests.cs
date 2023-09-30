@@ -53,10 +53,10 @@ namespace Acibitah.Tests
         [Fact]
         public void ShouldSubtasksBeGetForDetails()
         {
-            _taskRepositoryMock.Setup(x => x.GetById(_activeTasks.First().Id)).Returns(_activeTasks.First());
-            _taskRepositoryMock.Setup(x => x.GetSubtasksByTask(_activeTasks.First())).Returns(_activeSubTasks);
+            _taskRepositoryMock.Setup(x => x.GetById(_toDoTask.Id)).Returns(_toDoTask);
+            _taskRepositoryMock.Setup(x => x.GetSubtasksByTask(_toDoTask)).Returns(_activeSubTasks);
 
-            ViewResult result = (ViewResult)_taskController.Details(_activeTasks.First().Id);
+            ViewResult result = (ViewResult)_taskController.Details(_toDoTask.Id);
 
             Assert.Equal(typeof(TaskViewModel), result.Model.GetType());
             Assert.Single(((TaskViewModel)result.Model).Tasks);
@@ -78,9 +78,9 @@ namespace Acibitah.Tests
         [Fact]
         public void ShouldSubtasksBeGetWhenTaskIsValid()
         {
-            _taskRepositoryMock.Setup(x => x.GetById(_activeTasks.First().Id)).Returns(_activeTasks.First());
-            _taskRepositoryMock.Setup(x => x.GetSubtasksByTask(_activeTasks.First())).Returns(_activeSubTasks);
-            var result = _taskController.Details(_activeTasks.First().Id);
+            _taskRepositoryMock.Setup(x => x.GetById(_toDoTask.Id)).Returns(_toDoTask);
+            _taskRepositoryMock.Setup(x => x.GetSubtasksByTask(_toDoTask)).Returns(_activeSubTasks);
+            var result = _taskController.Details(_toDoTask.Id);
 
             Assert.Equal(typeof(ViewResult), result.GetType());
             Assert.Equal(null, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
@@ -130,9 +130,9 @@ namespace Acibitah.Tests
         [Fact]
         public void ShouldRemoveSuccessReturnMessage()
         {
-            _taskRepositoryMock.Setup(x => x.GetById(_activeTasks.First().Id)).Returns(_activeTasks.First());
-            _taskRepositoryMock.Setup(x => x.Remove(_activeTasks.First())).Returns(true);
-            var result = _taskController.Remove(_activeTasks.First().Id);
+            _taskRepositoryMock.Setup(x => x.GetById(_toDoTask.Id)).Returns(_toDoTask);
+            _taskRepositoryMock.Setup(x => x.Remove(_toDoTask)).Returns(true);
+            var result = _taskController.Remove(_toDoTask.Id);
 
             Assert.Equal(typeof(RedirectToActionResult), result.GetType());
             Assert.Equal(TaskController.KEY_SUCCESS_MESSAGE, GetTempDataMessage(TaskController.KEY_SUCCESS_MESSAGE, _taskController.TempData));
@@ -143,9 +143,9 @@ namespace Acibitah.Tests
         [Fact]
         public void ShouldRemoveErrorOnRepository()
         {
-            _taskRepositoryMock.Setup(x => x.GetById(_activeTasks.First().Id)).Returns(_activeTasks.First());
-            _taskRepositoryMock.Setup(x => x.Remove(_activeTasks.First())).Returns(false);
-            var result = _taskController.Remove(_activeTasks.First().Id);
+            _taskRepositoryMock.Setup(x => x.GetById(_toDoTask.Id)).Returns(_toDoTask);
+            _taskRepositoryMock.Setup(x => x.Remove(_toDoTask)).Returns(false);
+            var result = _taskController.Remove(_toDoTask.Id);
 
             Assert.Equal(typeof(RedirectToActionResult), result.GetType());
             Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
@@ -157,8 +157,8 @@ namespace Acibitah.Tests
         [Fact]
         public void ShouldShowDetailsGoThroughtWithoutError()
         {
-            _taskRepositoryMock.Setup(x => x.GetById(_activeTasks.First().Id)).Returns(_activeTasks.First());
-            var result = _taskController.Edit(_activeTasks.First().Id);
+            _taskRepositoryMock.Setup(x => x.GetById(_toDoTask.Id)).Returns(_toDoTask);
+            var result = _taskController.Edit(_toDoTask.Id);
 
             Assert.Equal(typeof(ViewResult), result.GetType());
             Assert.Equal(null, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
@@ -167,8 +167,8 @@ namespace Acibitah.Tests
         [Fact]
         public void ShouldShowDetailsGoThroughtWithError()
         {
-            _taskRepositoryMock.Setup(x => x.GetById(_activeTasks.First().Id)).Returns((ToDoTask)null);
-            var result = _taskController.Edit(_activeTasks.First().Id);
+            _taskRepositoryMock.Setup(x => x.GetById(_toDoTask.Id)).Returns((ToDoTask)null);
+            var result = _taskController.Edit(_toDoTask.Id);
 
             Assert.Equal(typeof(ViewResult), result.GetType());
             Assert.Equal(TaskController.KEY_ERROR_MESSAGE, GetTempDataMessage(TaskController.KEY_ERROR_MESSAGE, _taskController.TempData));
