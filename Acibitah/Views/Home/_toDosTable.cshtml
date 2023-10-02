@@ -1,6 +1,6 @@
 ﻿@model HomeViewModel
 
-<form method="post" >
+<form method="post" action="@Url.Action("QuickAddTaskWithTags", "Home")">
     <div class="mb-3 row">
         <input asp-for="@Model.ToDo.Title" class="form-control" />
         <button type="submit" class="btn btn-primary">Create</button>
