@@ -24,10 +24,11 @@ namespace Acibitah.Data.Repositories
             }
         }
 
-        public bool Save(Habit habit)
+        public bool Save(Habit habit, Tag tag)
         {
             try
             {
+                habit.Tags.Add(tag);
                 _db.Habits.Add(habit);
                 _db.SaveChanges();
                 return true;

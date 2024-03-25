@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace Acibitah.Data.Repositories.Interfaces
 {
-    public interface IHabitRepository
+    public interface ITagsRepository
     {
-        IEnumerable<Habit> GetAll();
-        Habit? GetById(int id);
-        bool IncreaseStreak(Habit? habit);
-        bool Save(Habit habit, Tag tag); 
+        IEnumerable<Tag> GetAll();
+        bool Save(Tag tag);
     }
 }
