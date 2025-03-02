@@ -1,8 +1,6 @@
-﻿using Acibitah.Data.Repositories;
-using Acibitah.Data.Repositories.Interfaces;
+﻿using Acibitah.Data.Repositories.Interfaces;
 using Acibitah.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace Acibitah.Controllers
 {
@@ -132,27 +130,6 @@ namespace Acibitah.Controllers
             }
             var result = _taskRepository.MarkAsDone(todo);
             IsResultTrueWithTempMessage(result, ERROR_SAVING, SUCCESS_SAVED);
-        }
-
-        private bool IsResultTrueWithTempMessage(bool result, string error, string success)
-        {
-            if (result)
-            {
-                TempData[KEY_SUCCESS_MESSAGE] = success;
-                return true;
-            }
-            TempData[KEY_ERROR_MESSAGE] = error;
-            return false;
-        }
-
-        private bool NullValueWithTempMessage(IModel item, string error)
-        {
-            if (item == null)
-            {
-                TempData[KEY_ERROR_MESSAGE] = error;
-                return true;
-            }
-            return false;
         }
     }
 }

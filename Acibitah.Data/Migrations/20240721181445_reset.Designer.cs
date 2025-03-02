@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Acibitah.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230930110137_AddingDoneFlagToDailies")]
-    partial class AddingDoneFlagToDailies
+    [Migration("20240721181445_reset")]
+    partial class reset
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,7 +36,6 @@ namespace Acibitah.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Done")
@@ -57,7 +56,7 @@ namespace Acibitah.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 9, 30, 13, 1, 37, 263, DateTimeKind.Local).AddTicks(9409),
+                            Created = new DateTime(2024, 7, 21, 20, 14, 45, 89, DateTimeKind.Local).AddTicks(5337),
                             Description = "Breakfast",
                             Done = false,
                             Name = "Breakfast",
@@ -95,7 +94,7 @@ namespace Acibitah.Data.Migrations
                         new
                         {
                             Id = 1,
-                            DateOfUpdate = new DateTime(2023, 9, 30, 13, 1, 37, 263, DateTimeKind.Local).AddTicks(9454),
+                            DateOfUpdate = new DateTime(2024, 7, 21, 20, 14, 45, 89, DateTimeKind.Local).AddTicks(5383),
                             HabitId = 1,
                             NegativeValue = 5,
                             PositiveValue = 1
@@ -205,6 +204,8 @@ namespace Acibitah.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TaskId");
+
                     b.ToTable("Subtasks");
 
                     b.HasData(
@@ -219,6 +220,14 @@ namespace Acibitah.Data.Migrations
                         new
                         {
                             Id = 2,
+                            Description = "I need to do the second thing",
+                            Done = true,
+                            Name = "Second thing to do",
+                            TaskId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
                             Description = "I need to do the second thing",
                             Done = true,
                             Name = "Second thing to do",
@@ -250,6 +259,21 @@ namespace Acibitah.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Acibitah.Models.TagsTasks", b =>
+                {
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TagId", "TaskId");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("TagsTasks");
+                });
+
             modelBuilder.Entity("Acibitah.Models.ToDoTask", b =>
                 {
                     b.Property<int>("Id")
@@ -264,6 +288,9 @@ namespace Acibitah.Data.Migrations
 
                     b.Property<int?>("Difficulty")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Done")
+                        .HasColumnType("bit");
 
                     b.Property<int>("MoneyImpact")
                         .HasColumnType("int");
@@ -281,6 +308,15 @@ namespace Acibitah.Data.Migrations
                         {
                             Id = 1,
                             Content = "Test",
+                            Done = false,
+                            MoneyImpact = 5,
+                            Title = "Action"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Content = "Test",
+                            Done = false,
                             MoneyImpact = 5,
                             Title = "Action"
                         });
@@ -345,43 +381,6 @@ namespace Acibitah.Data.Migrations
                     b.ToTable("HabitTag");
                 });
 
-            modelBuilder.Entity("SubtaskToDoTask", b =>
-                {
-                    b.Property<int>("SubtasksId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TasksId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SubtasksId", "TasksId");
-
-                    b.HasIndex("TasksId");
-
-                    b.ToTable("SubtaskToDoTask");
-                });
-
-            modelBuilder.Entity("TagToDoTask", b =>
-                {
-                    b.Property<int>("TagsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TasksId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TagsId", "TasksId");
-
-                    b.HasIndex("TasksId");
-
-                    b.ToTable("TagToDoTask");
-
-                    b.HasData(
-                        new
-                        {
-                            TagsId = 1,
-                            TasksId = 3
-                        });
-                });
-
             modelBuilder.Entity("Acibitah.Models.HabbitStats", b =>
                 {
                     b.HasOne("Acibitah.Models.Habit", "Habit")
@@ -391,6 +390,36 @@ namespace Acibitah.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Habit");
+                });
+
+            modelBuilder.Entity("Acibitah.Models.Subtask", b =>
+                {
+                    b.HasOne("Acibitah.Models.ToDoTask", "Task")
+                        .WithMany("Subtasks")
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("Acibitah.Models.TagsTasks", b =>
+                {
+                    b.HasOne("Acibitah.Models.Tag", "Tag")
+                        .WithMany("TagsTasks")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Acibitah.Models.ToDoTask", "Task")
+                        .WithMany("TagsTasks")
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tag");
+
+                    b.Navigation("Task");
                 });
 
             modelBuilder.Entity("DailyTag", b =>
@@ -423,34 +452,16 @@ namespace Acibitah.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SubtaskToDoTask", b =>
+            modelBuilder.Entity("Acibitah.Models.Tag", b =>
                 {
-                    b.HasOne("Acibitah.Models.Subtask", null)
-                        .WithMany()
-                        .HasForeignKey("SubtasksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Acibitah.Models.ToDoTask", null)
-                        .WithMany()
-                        .HasForeignKey("TasksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("TagsTasks");
                 });
 
-            modelBuilder.Entity("TagToDoTask", b =>
+            modelBuilder.Entity("Acibitah.Models.ToDoTask", b =>
                 {
-                    b.HasOne("Acibitah.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Subtasks");
 
-                    b.HasOne("Acibitah.Models.ToDoTask", null)
-                        .WithMany()
-                        .HasForeignKey("TasksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("TagsTasks");
                 });
 #pragma warning restore 612, 618
         }

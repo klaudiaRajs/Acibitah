@@ -3,6 +3,11 @@
     ViewData["Title"] = "Home Page";
 }
 
+
+<div class="row">
+    @await Html.PartialAsync("_tags.cshtml", Model)
+
+</div>
 <div class="row">
     <div class="col p-3">
         <div>

@@ -1,0 +1,12 @@
+﻿@model StatisticsViewModel
+
+<div>
+    <h2> What you have already achieved. </h2>
+</div>
+
+@foreach (var item in Model.Items)
+{
+    <div> Date: @item.Date </div>
+    <div> Factor name: @item.FactorName </div>
+    <div> Value: @item.Value </div>
+}

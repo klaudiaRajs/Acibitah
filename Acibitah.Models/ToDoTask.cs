@@ -1,10 +1,4 @@
-﻿using Acibitah.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Acibitah.Models
 {
@@ -18,6 +12,6 @@ namespace Acibitah.Models
         public int MoneyImpact { get; set; } = 5;
         public bool Done { get; set; } = false;
         public ICollection<Subtask> Subtasks { get; set; }
-        public ICollection<Tag> Tags { get; set; }
+        public ICollection<TagsTasks> TagsTasks { get; set; }
     }
 }

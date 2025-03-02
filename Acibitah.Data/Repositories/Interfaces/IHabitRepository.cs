@@ -12,6 +12,6 @@ namespace Acibitah.Data.Repositories.Interfaces
         IEnumerable<Habit> GetAll();
         Habit? GetById(int id);
         bool IncreaseStreak(Habit? habit);
-        bool Save(Habit habit); 
+        bool Save(Habit habit, Tag tag); 
     }
 }

@@ -15,6 +15,7 @@ namespace Acibitah.Tests.Controllers
         protected readonly Mock<ITaskRepository> _taskRepositoryMock;
         protected readonly Mock<IHabitRepository> _habitRepositoryMock;
         protected readonly Mock<IDailyRepository> _dailyRepositoryMock;
+        protected readonly Mock<ITagsRepository> _tagsRepositoryMock; 
         public BaseTest()
         {
             _activeTasks = new List<ToDoTask>
@@ -38,6 +39,7 @@ namespace Acibitah.Tests.Controllers
             _taskRepositoryMock = new Mock<ITaskRepository>();
             _habitRepositoryMock = new Mock<IHabitRepository>();
             _dailyRepositoryMock = new Mock<IDailyRepository>();
+            _tagsRepositoryMock = new Mock<ITagsRepository>();
         }
 
         protected string GetTempDataMessage(string message, ITempDataDictionary temp)

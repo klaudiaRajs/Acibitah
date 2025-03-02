@@ -14,13 +14,15 @@ namespace Acibitah.Controllers
         private IHabitRepository _habitRepository; 
         private IDailyRepository _dailyRepository;
         private ITaskRepository _taskRepository;
+        private ITagsRepository _tagsRepository;
 
-        public HomeController(IHabitRepository habitRepository, IDailyRepository dailyRepository, ITaskRepository taskRepository)
+        public HomeController(IHabitRepository habitRepository, IDailyRepository dailyRepository, ITaskRepository taskRepository, ITagsRepository tagsRepository)
         {
             _homeViewModel = new HomeViewModel();
             _habitRepository = habitRepository;
             _dailyRepository = dailyRepository;
-            _taskRepository = taskRepository; 
+            _taskRepository = taskRepository;
+            _tagsRepository = tagsRepository;
         }
 
         public IActionResult Index()
@@ -28,8 +30,9 @@ namespace Acibitah.Controllers
             _homeViewModel.Habits = _habitRepository.GetAll(); 
             _homeViewModel.Dailies = _dailyRepository.GetAll();
             _homeViewModel.ToDos = _taskRepository.GetAll();
+            _homeViewModel.Tags = _tagsRepository.GetAll();
 
-            if(  _homeViewModel.Habits == null || _homeViewModel.Dailies == null  || _homeViewModel.ToDos == null)
+            if(  _homeViewModel.Habits == null || _homeViewModel.Dailies == null  || _homeViewModel.ToDos == null || _homeViewModel.Tags == null)
             {
                 TempData[KEY_ERROR_MESSAGE] = ERROR_RETRIEVING; 
             }
@@ -65,7 +68,7 @@ namespace Acibitah.Controllers
             }
             else
             {
-                bool result = _habitRepository.Save(viewModel.Habit);
+                bool result = _habitRepository.Save(viewModel.Habit, viewModel.Tag);
                 if (!result)
                 {
                     TempData[KEY_ERROR_MESSAGE] = ERROR_SAVING;
@@ -88,16 +91,17 @@ namespace Acibitah.Controllers
             else
             {
                 bool result = _dailyRepository.Save(viewModel.Daily);
-                if (!result)
-                {
-                    TempData[KEY_ERROR_MESSAGE] = ERROR_SAVING;
-                }
-                else
-                {
-                    TempData[KEY_SUCCESS_MESSAGE] = SUCCESS_SAVED;
-                }
+                IsResultTrueWithTempMessage(result, ERROR_SAVING, SUCCESS_SAVED);
             }
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult QuickAddTags(HomeViewModel viewModel)
+        {
+            var result = _tagsRepository.Save(viewModel.Tag);
+            IsResultTrueWithTempMessage(result, ERROR_SAVING, SUCCESS_SAVED);
+            return RedirectToAction("Index"); 
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

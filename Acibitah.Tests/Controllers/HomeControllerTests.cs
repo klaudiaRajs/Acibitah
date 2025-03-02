@@ -17,7 +17,8 @@ namespace Acibitah.Controllers.Tests
             _homeController = new HomeController(
                 _habitRepositoryMock.Object,
                 _dailyRepositoryMock.Object,
-                _taskRepositoryMock.Object
+                _taskRepositoryMock.Object, 
+                _tagsRepositoryMock.Object
             );
             ITempDataProvider tempDataProvider = Mock.Of<ITempDataProvider>();
             TempDataDictionaryFactory tempDataDictionaryFactory = new TempDataDictionaryFactory(tempDataProvider);
@@ -129,9 +130,9 @@ namespace Acibitah.Controllers.Tests
         {
             HomeViewModel model = new HomeViewModel();
             model.Habit = new Habit() { Name = "TestName" };
-            _habitRepositoryMock.Setup(method => method.Save(model.Habit)).Returns(false);
+            _habitRepositoryMock.Setup(method => method.Save(model.Habit, null)).Returns(false);
             var result = _homeController.QuickAddHabitWithTags(model);
-            Assert.Equal(typeof(RedirectToActionResult), result.GetType());
+            Assert.Equal(typeof(ViewResult), result.GetType());
             Assert.Equal(HomeController.KEY_ERROR_MESSAGE, GetTempDataMessage(HomeController.KEY_ERROR_MESSAGE, _homeController.TempData));
             Assert.Equal(BaseController.ERROR_SAVING, _homeController.TempData[HomeController.KEY_ERROR_MESSAGE]);
         }
@@ -141,7 +142,7 @@ namespace Acibitah.Controllers.Tests
         {
             HomeViewModel model = new HomeViewModel();
             model.Habit = new Habit() { Name = "TestName" };
-            _habitRepositoryMock.Setup(method => method.Save(model.Habit)).Returns(true);
+            _habitRepositoryMock.Setup(method => method.Save(model.Habit, null)).Returns(true);
             var result = _homeController.QuickAddHabitWithTags(model);
             Assert.Equal(typeof(RedirectToActionResult), result.GetType());
             Assert.Equal(HomeController.KEY_SUCCESS_MESSAGE, GetTempDataMessage(HomeController.KEY_SUCCESS_MESSAGE, _homeController.TempData));

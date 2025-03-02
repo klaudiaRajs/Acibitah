@@ -16,6 +16,7 @@ builder.Services.AddTransient<ITaskRepository, TaskRepository>();
 builder.Services.AddTransient<IHabitRepository, HabitRepository>();
 builder.Services.AddTransient<IDailyRepository, DailyRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<ITagsRepository, TagsRepository>();
 
 var app = builder.Build();
 

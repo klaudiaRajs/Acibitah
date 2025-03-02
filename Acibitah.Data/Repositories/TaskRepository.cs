@@ -2,11 +2,6 @@
 using Acibitah.Data.Repositories.Interfaces;
 using Acibitah.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Acibitah.Data.Repositories
 {
@@ -20,7 +15,7 @@ namespace Acibitah.Data.Repositories
         {
             try
             {
-                return _db.ToDoTasks.Where(a => a.Done == false).Include(task => task.Tags).ToList(); 
+                return _db.ToDoTasks.Where(a => a.Done == false).Include(task => task.TagsTasks).ThenInclude(link => link.Tag).ToList(); 
             } catch (Exception ex) 
             {
                 return Enumerable.Empty<ToDoTask>();
